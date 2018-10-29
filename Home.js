@@ -8,7 +8,7 @@ import {
   FlatList
 } from 'react-native';
 
-export default class App extends Component<Props> {
+export default class App extends React.Component<Props> {
   state = {
     items: [],
     refreshing: false,
@@ -31,6 +31,10 @@ export default class App extends Component<Props> {
       });
   }
 
+  navigateToDetail() {
+    this.props.navigation.navigate('Detail');
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -39,7 +43,11 @@ export default class App extends Component<Props> {
         </TouchableOpacity>
         <FlatList
           data={this.state.items}
-          renderItem={({ item }) => <Text style={{padding: 20}}>{item.name}</Text>}
+          renderItem={({ item }) =>
+            <TouchableOpacity onPress={() => this.navigateToDetail()}>
+              <Text style={{padding: 20}}>{item.name}</Text>
+            </TouchableOpacity>
+          }
           keyExtractor={(item) => item.id.toString()}
           onEndReached={() => this.fetchRepositories()}
           onEndReachedThreshold={0.1}
