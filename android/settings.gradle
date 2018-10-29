@@ -1,0 +1,3 @@
+rootProject.name = 'data_acquisition_from_github'
+
+include ':app'
