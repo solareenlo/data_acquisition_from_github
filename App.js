@@ -12,9 +12,6 @@ export default createStackNavigator({
   },
   Detail: {
     screen: Detail,
-    navigationOptions: ({ navigation }) => ({
-      title: navigation.state.params.item.name,
-    }),
   },
 }, {
   initialRouteName: 'Home',
