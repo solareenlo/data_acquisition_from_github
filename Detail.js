@@ -3,9 +3,9 @@ import { Text, View } from 'react-native';
 
 export default class Detail extends React.Component {
   render() {
-    const { navigation } = this.props;
+    const { navigation: { state: { params: { item }}} } = this.props;
     return (
-      <Text>{navigation.state.params.item.name}</Text>
+      <Text>{item.name}</Text>
     );
   }
 }
