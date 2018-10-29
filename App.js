@@ -11,17 +11,23 @@ import {
 export default class App extends Component<Props> {
   state = {
     items: [],
+    refreshing: false,
   }
 
   page = 0;
 
-  fetchRepositories() {
-    const newPage = this.page + 1;
+  fetchRepositories(refreshing = false) {
+    const newPage = refreshing ? 1 : this.page + 1;
+    this.setState({ refreshing });
     fetch(`https://api.github.com/search/repositories?q=react&page=${newPage}`)
       .then(response => response.json())
       .then(({ items }) => {
         this.page = newPage;
-        this.setState({ items: [...this.state.items, ...items] });
+        if(refreshing) {
+          this.setState({ items, refreshing: false });
+        } else {
+          this.setState({ items: [...this.state.items, ...items], refreshing: false });
+        }
       });
   }
 
@@ -37,6 +43,8 @@ export default class App extends Component<Props> {
           keyExtractor={(item) => item.id.toString()}
           onEndReached={() => this.fetchRepositories()}
           onEndReachedThreshold={0.1}
+          onRefresh={() => this.fetchRepositories(true)}
+          refreshing={this.state.refreshing}
         />
       </View>
     );
