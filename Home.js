@@ -31,8 +31,8 @@ export default class App extends React.Component<Props> {
       });
   }
 
-  navigateToDetail() {
-    this.props.navigation.navigate('Detail');
+  navigateToDetail(item) {
+    this.props.navigation.navigate('Detail', { item });
   }
 
   render() {
@@ -44,7 +44,7 @@ export default class App extends React.Component<Props> {
         <FlatList
           data={this.state.items}
           renderItem={({ item }) =>
-            <TouchableOpacity onPress={() => this.navigateToDetail()}>
+            <TouchableOpacity onPress={() => this.navigateToDetail(item)}>
               <Text style={{padding: 20}}>{item.name}</Text>
             </TouchableOpacity>
           }
