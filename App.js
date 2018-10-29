@@ -4,23 +4,32 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from 'react-native';
 
 export default class App extends Component<Props> {
+  state = {
+    items: [],
+  }
   onPressFetch() {
     //fetch('https://api.github.com/search/repositories?q=react')
     fetch('https://api.github.com/search/repositories?q=react&page=2')
       .then(response => response.json())
-      .then(({ items }) => console.log(items));
+      .then(({ items }) => this.setState({ items }));
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => this.onPressFetch()}>
+        <TouchableOpacity style={{marginTop: 40}} onPress={() => this.onPressFetch()}>
           <Text>Fetch</Text>
         </TouchableOpacity>
+        <FlatList
+          data={this.state.items}
+          renderItem={({ item }) => <Text>{item.name}</Text>}
+          keyExtractor={(item) => item.id}
+        />
       </View>
     );
   }
@@ -29,8 +38,6 @@ export default class App extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
 });
