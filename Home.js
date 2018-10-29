@@ -5,7 +5,8 @@ import {
   Text,
   View,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  TextInput
 } from 'react-native';
 
 export default class App extends React.Component<Props> {
@@ -38,6 +39,12 @@ export default class App extends React.Component<Props> {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.inputWrapper}>
+          <TextInput style={styles.input}/>
+          <TouchableOpacity>
+            <Text style={styles.searchText}>Search</Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity style={{marginTop: 40}} onPress={() => this.fetchRepositories()}>
           <Text>Fetch</Text>
         </TouchableOpacity>
@@ -63,5 +70,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
+  },
+  inputWrapper: {
+    padding: 20,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#EEE',
+    borderRadius: 8,
+  },
+  searchText: {
+    padding: 10,
   },
 });
