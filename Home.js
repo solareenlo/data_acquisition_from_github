@@ -6,13 +6,15 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  TextInput
+  TextInput,
+  Image
 } from 'react-native';
 
-export default class App extends React.Component<Props> {
+export default class App extends React.Component<{}> {
   state = {
     items: [],
     refreshing: false,
+    text: '',
   }
 
   page = 0;
@@ -20,7 +22,7 @@ export default class App extends React.Component<Props> {
   fetchRepositories(refreshing = false) {
     const newPage = refreshing ? 1 : this.page + 1;
     this.setState({ refreshing });
-    fetch(`https://api.github.com/search/repositories?q=react&page=${newPage}`)
+    fetch(`https://api.github.com/search/repositories?q=${this.state.text}&page=${newPage}`)
       .then(response => response.json())
       .then(({ items }) => {
         this.page = newPage;
@@ -40,19 +42,20 @@ export default class App extends React.Component<Props> {
     return (
       <View style={styles.container}>
         <View style={styles.inputWrapper}>
-          <TextInput style={styles.input}/>
-          <TouchableOpacity>
+          <TextInput style={styles.input} onChangeText={(text) => this.setState({ text })} />
+          <TouchableOpacity onPress={() => this.fetchRepositories(true)}>
             <Text style={styles.searchText}>Search</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={{marginTop: 40}} onPress={() => this.fetchRepositories()}>
-          <Text>Fetch</Text>
-        </TouchableOpacity>
         <FlatList
           data={this.state.items}
           renderItem={({ item }) =>
-            <TouchableOpacity onPress={() => this.navigateToDetail(item)}>
-              <Text style={{padding: 20}}>{item.name}</Text>
+            <TouchableOpacity style={{ padding: 10 }}onPress={() => this.navigateToDetail(item)}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>{item.name}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Image style={styles.ownerIcon} source={{ uri: item.owner.avatar_url }}/>
+                <Text style={styles.ownerName}>{item.owner.login}</Text>
+              </View>
             </TouchableOpacity>
           }
           keyExtractor={(item) => item.id.toString()}
@@ -61,6 +64,9 @@ export default class App extends React.Component<Props> {
           onRefresh={() => this.fetchRepositories(true)}
           refreshing={this.state.refreshing}
         />
+        <TouchableOpacity>
+          <Text></Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -85,5 +91,14 @@ const styles = StyleSheet.create({
   },
   searchText: {
     padding: 10,
+  },
+  ownerIcon: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginRight: 5,
+  },
+  ownerName: {
+    fontSize: 14,
   },
 });
