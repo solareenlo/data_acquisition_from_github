@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
-  Image
+  Image,
+  AppState
 } from 'react-native';
 
 export default class App extends React.Component<{}> {
@@ -36,6 +37,20 @@ export default class App extends React.Component<{}> {
 
   navigateToDetail(item) {
     this.props.navigation.navigate('Detail', { item });
+  }
+
+  componentDidMount() {
+    AppState.addEventListener('change', this.onChangeState);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.onChangeState);
+  }
+
+  onChangeState = (appState) => {
+    if(appState === 'active') {
+      this.fetchRepositories(true);
+    }
   }
 
   render() {
